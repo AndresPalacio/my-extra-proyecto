@@ -1,0 +1,64 @@
+repositories {
+ 	maven { url "http://10.101.129.155:8080/repository/internal/" }
+ 	jcenter()
+}
+
+
+
+buildscript {
+ext{
+		serenityCoreVersion = "2.0.11"
+	}
+    repositories {
+        mavenLocal()
+        maven { url "http://10.101.129.155:8080/repository/internal/" }
+        jcenter()
+    }
+    dependencies {
+        classpath("net.serenity-bdd:serenity-gradle-plugin:$serenityCoreVersion")
+    }
+}
+
+
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'net.serenity-bdd.aggregator'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+task runTests(type: Test) {
+	include '**/**Runner.*'
+}
+
+
+	ext{
+    	serenityCoreVersion = "2.0.21"
+    	serenityCucumberVersion = "1.9.30"
+	}	
+	
+dependencies {
+
+	implementation "co.com.bancolombia.certificacion:myextra:1.0.0" 
+	implementation "net.sf.jacob-project:jacob:1.14.3"
+    implementation "net.serenity-bdd:serenity-core:${serenityCoreVersion}"
+    implementation "net.serenity-bdd:serenity-junit:${serenityCoreVersion}"
+    implementation "net.serenity-bdd:serenity-cucumber:${serenityCucumberVersion}"
+	implementation "net.serenity-bdd:serenity-screenplay:${serenityCoreVersion}"
+	implementation "net.serenity-bdd:serenity-screenplay:${serenityCoreVersion}"
+	implementation "net.serenity-bdd:serenity-screenplay-webdriver:${serenityCoreVersion}"
+	implementation "net.serenity-bdd:serenity-rest-assured:${serenityCoreVersion}"
+    implementation 'junit:junit:4.12'
+    implementation 'org.assertj:assertj-core:3.9.1'
+    implementation 'org.slf4j:slf4j-simple:1.7.7'
+}
+
+
+gradle.startParameter.continueOnFailure = true
+test.finalizedBy(aggregate)
